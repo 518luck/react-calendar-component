@@ -1,4 +1,6 @@
+import Calendar from '@/components/Calendar'
+import dayjs from 'dayjs'
 function App() {
-  return <div>this is app</div>
+  return <Calendar value={dayjs('2023-11-08')} />
 }
 export default App
