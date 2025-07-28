@@ -1,6 +1,10 @@
+import type { Dayjs } from 'dayjs'
 import MonthCalendar from './MonthCalendar'
-import type { CalendarProps } from './type.d'
 import styles from './index.module.scss'
+
+export interface CalendarProps {
+  value: Dayjs
+}
 
 const Calendar = (props: CalendarProps) => {
   return (

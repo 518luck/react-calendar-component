@@ -18,4 +18,23 @@
       flex: 1;
     }
   }
+
+  &Body {
+    &Row {
+      height: 100%;
+      display: flex;
+    }
+
+    &Cell {
+      flex: 1;
+      border: 1px solid #eee;
+      padding: 10px;
+      color: #ccc;
+
+      &Current {
+        color: #000;
+      }
+    }
+  }
+
 }
