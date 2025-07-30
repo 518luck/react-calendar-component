@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import type { Dayjs } from 'dayjs'
+import cs from 'classnames'
 
 import type { CalendarProps } from './index'
 import styles from './index.module.scss'
@@ -7,7 +8,8 @@ import allLocales from './locale'
 import LocaleContext from './locale/LocaleContext'
 
 interface MonthCalendarProps extends CalendarProps {
-  value: Dayjs
+  selectHandler?: (date: Dayjs) => void
+  curMonth: Dayjs
 }
 
 const getAllDays = (date: Dayjs) => {
@@ -36,7 +38,9 @@ const getAllDays = (date: Dayjs) => {
 const renderDays = (
   days: Array<{ date: Dayjs; currentMonth: boolean }>,
   dateRender: MonthCalendarProps['dateRender'],
-  dateInnerContent: MonthCalendarProps['dateInnerContent']
+  dateInnerContent: MonthCalendarProps['dateInnerContent'],
+  value: Dayjs,
+  selectHandler: MonthCalendarProps['selectHandler']
 ) => {
   const rows = []
   for (let i = 0; i < 6; i++) {
@@ -48,12 +52,21 @@ const renderDays = (
         : styles.calendarMonthBodyCell
 
       row[j] = (
-        <div key={i * 7 + j} className={cellClass}>
+        <div
+          key={i * 7 + j}
+          className={cellClass}
+          onClick={() => selectHandler?.(item.date)}>
           {dateRender ? (
             dateRender(item.date)
           ) : (
             <div className={styles.calendarMonthBodyCellDate}>
-              <div className={styles.calendarMonthBodyCellDateValue}>
+              <div
+                className={cs(
+                  styles.calendarMonthBodyCellDateValue,
+                  value.format('YYYY-MM-DD') === item.date.format('YYYY-MM-DD')
+                    ? styles.calendarMonthBodyCellDateSelected
+                    : ''
+                )}>
                 {item.date.date()}
               </div>
               <div className={styles.calendarMonthBodyCellDateContent}>
@@ -75,7 +88,7 @@ const renderDays = (
 const MonthCalendar = (props: MonthCalendarProps) => {
   const localeContext = useContext(LocaleContext)
 
-  const { dateRender, dateInnerContent } = props
+  const { value, dateRender, dateInnerContent, selectHandler, curMonth } = props
 
   const CalendarLocale = allLocales[localeContext.locale]
 
@@ -89,7 +102,7 @@ const MonthCalendar = (props: MonthCalendarProps) => {
     'saturday',
   ]
 
-  const allDays = getAllDays(props.value)
+  const allDays = getAllDays(curMonth)
 
   return (
     <div className={styles.calendarMonth}>
@@ -101,7 +114,13 @@ const MonthCalendar = (props: MonthCalendarProps) => {
         ))}
       </div>
       <div className={styles.calendarMonthBody}>
-        {renderDays(allDays, dateRender, dateInnerContent)}
+        {renderDays(
+          allDays,
+          dateRender,
+          dateInnerContent,
+          value,
+          selectHandler
+        )}
       </div>
     </div>
   )

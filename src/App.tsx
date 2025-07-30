@@ -3,9 +3,12 @@ import dayjs from 'dayjs'
 function App() {
   return (
     <Calendar
-      value={dayjs('2023-11-08')}
+      value={dayjs('2023-11-09')}
       locale='en-US'
-      dateInnerContent={(value) => {
+      onChange={(date) => {
+        alert(date.format('YYYY-MM-DD'))
+      }}
+      /*  dateInnerContent={(value) => {
         return (
           <div>
             <p style={{ background: 'yellowgreen', height: '30px' }}>
@@ -13,7 +16,7 @@ function App() {
             </p>
           </div>
         )
-      }}
+      }} */
     />
   )
 }

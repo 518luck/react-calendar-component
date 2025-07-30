@@ -37,6 +37,17 @@
 
       &Date {
         padding: 10px;
+
+        &Selected {
+          background: blue;
+          width: 28px;
+          height: 28px;
+          line-height: 28px;
+          text-align: center;
+          color: #fff;
+          border-radius: 50%;
+          cursor: pointer;
+        }
       }
     }
   }
@@ -67,24 +78,26 @@
       background: #ccc;
     }
 
-    &_icon {
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-      border-radius: 50%;
-      text-align: center;
-      font-size: 12px;
-      user-select: none;
-      cursor: pointer;
-      margin-right: 12px;
 
-      &:not(:first-child) {
-        margin: 0 12px;
-      }
+  }
 
-      &:hover {
-        background: #ccc;
-      }
+  &_icon {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    user-select: none;
+    cursor: pointer;
+    margin-right: 12px;
+
+    &:not(:first-child) {
+      margin: 0 12px;
+    }
+
+    &:hover {
+      background: #ccc;
     }
   }
 }
