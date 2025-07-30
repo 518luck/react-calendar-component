@@ -28,12 +28,15 @@
     &Cell {
       flex: 1;
       border: 1px solid #eee;
-      padding: 10px;
       color: #ccc;
       overflow: hidden;
 
       &Current {
         color: #000;
+      }
+
+      &Date {
+        padding: 10px;
       }
     }
   }

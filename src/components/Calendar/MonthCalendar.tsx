@@ -1,6 +1,10 @@
+import { useContext } from 'react'
 import type { Dayjs } from 'dayjs'
+
 import type { CalendarProps } from './index'
 import styles from './index.module.scss'
+import allLocales from './locale'
+import LocaleContext from './locale/LocaleContext'
 
 interface MonthCalendarProps extends CalendarProps {
   value: Dayjs
@@ -34,8 +38,6 @@ const renderDays = (
   dateRender: MonthCalendarProps['dateRender'],
   dateInnerContent: MonthCalendarProps['dateInnerContent']
 ) => {
-  console.log(dateInnerContent)
-
   const rows = []
   for (let i = 0; i < 6; i++) {
     const row = []
@@ -47,7 +49,18 @@ const renderDays = (
 
       row[j] = (
         <div key={i * 7 + j} className={cellClass}>
-          {dateRender ? dateRender(item.date) : item.date.date()}
+          {dateRender ? (
+            dateRender(item.date)
+          ) : (
+            <div className={styles.calendarMonthBodyCellDate}>
+              <div className={styles.calendarMonthBodyCellDateValue}>
+                {item.date.date()}
+              </div>
+              <div className={styles.calendarMonthBodyCellDateContent}>
+                {dateInnerContent?.(item.date)}
+              </div>
+            </div>
+          )}
         </div>
       )
     }
@@ -60,9 +73,21 @@ const renderDays = (
   ))
 }
 const MonthCalendar = (props: MonthCalendarProps) => {
+  const localeContext = useContext(LocaleContext)
+
   const { dateRender, dateInnerContent } = props
 
-  const weekList = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  const CalendarLocale = allLocales[localeContext.locale]
+
+  const weekList = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ]
 
   const allDays = getAllDays(props.value)
 
@@ -71,7 +96,7 @@ const MonthCalendar = (props: MonthCalendarProps) => {
       <div className={styles.weekList}>
         {weekList.map((week) => (
           <div className={styles.listItem} key={week}>
-            {week}
+            {CalendarLocale.week[week]}
           </div>
         ))}
       </div>

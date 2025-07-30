@@ -4,10 +4,11 @@ function App() {
   return (
     <Calendar
       value={dayjs('2023-11-08')}
-      dateRender={(value) => {
+      locale='en-US'
+      dateInnerContent={(value) => {
         return (
           <div>
-            <p style={{ background: 'yellowgreen', height: '500px' }}>
+            <p style={{ background: 'yellowgreen', height: '30px' }}>
               {value.format('YYYY/MM/DD')}
             </p>
           </div>
