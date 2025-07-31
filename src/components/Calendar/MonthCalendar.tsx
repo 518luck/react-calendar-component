@@ -35,56 +35,6 @@ const getAllDays = (date: Dayjs) => {
   return daysInfo
 }
 
-const renderDays = (
-  days: Array<{ date: Dayjs; currentMonth: boolean }>,
-  dateRender: MonthCalendarProps['dateRender'],
-  dateInnerContent: MonthCalendarProps['dateInnerContent'],
-  value: Dayjs,
-  selectHandler: MonthCalendarProps['selectHandler']
-) => {
-  const rows = []
-  for (let i = 0; i < 6; i++) {
-    const row = []
-    for (let j = 0; j < 7; j++) {
-      const item = days[i * 7 + j]
-      const cellClass = item.currentMonth
-        ? `${styles.calendarMonthBodyCell} ${styles.calendarMonthBodyCellCurrent}`
-        : styles.calendarMonthBodyCell
-
-      row[j] = (
-        <div
-          key={i * 7 + j}
-          className={cellClass}
-          onClick={() => selectHandler?.(item.date)}>
-          {dateRender ? (
-            dateRender(item.date)
-          ) : (
-            <div className={styles.calendarMonthBodyCellDate}>
-              <div
-                className={cs(
-                  styles.calendarMonthBodyCellDateValue,
-                  value.format('YYYY-MM-DD') === item.date.format('YYYY-MM-DD')
-                    ? styles.calendarMonthBodyCellDateSelected
-                    : ''
-                )}>
-                {item.date.date()}
-              </div>
-              <div className={styles.calendarMonthBodyCellDateContent}>
-                {dateInnerContent?.(item.date)}
-              </div>
-            </div>
-          )}
-        </div>
-      )
-    }
-    rows.push(row)
-  }
-  return rows.map((row, index) => (
-    <div key={index} className={styles.calendarMonthBodyRow}>
-      {row}
-    </div>
-  ))
-}
 const MonthCalendar = (props: MonthCalendarProps) => {
   const localeContext = useContext(LocaleContext)
 
@@ -104,6 +54,52 @@ const MonthCalendar = (props: MonthCalendarProps) => {
 
   const allDays = getAllDays(curMonth)
 
+  const renderDays = (days: Array<{ date: Dayjs; currentMonth: boolean }>) => {
+    const rows = []
+    for (let i = 0; i < 6; i++) {
+      const row = []
+      for (let j = 0; j < 7; j++) {
+        const item = days[i * 7 + j]
+        const cellClass = item.currentMonth
+          ? `${styles.calendarMonthBodyCell} ${styles.calendarMonthBodyCellCurrent}`
+          : styles.calendarMonthBodyCell
+
+        row[j] = (
+          <div
+            key={i * 7 + j}
+            className={cellClass}
+            onClick={() => selectHandler?.(item.date)}>
+            {dateRender ? (
+              dateRender(item.date)
+            ) : (
+              <div className={styles.calendarMonthBodyCellDate}>
+                <div
+                  className={cs(
+                    styles.calendarMonthBodyCellDateValue,
+                    value?.format('YYYY-MM-DD') ===
+                      item.date.format('YYYY-MM-DD')
+                      ? styles.calendarMonthBodyCellDateSelected
+                      : ''
+                  )}>
+                  {item.date.date()}
+                </div>
+                <div className={styles.calendarMonthBodyCellDateContent}>
+                  {dateInnerContent?.(item.date)}
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      }
+      rows.push(row)
+    }
+    return rows.map((row, index) => (
+      <div key={index} className={styles.calendarMonthBodyRow}>
+        {row}
+      </div>
+    ))
+  }
+
   return (
     <div className={styles.calendarMonth}>
       <div className={styles.weekList}>
@@ -113,15 +109,7 @@ const MonthCalendar = (props: MonthCalendarProps) => {
           </div>
         ))}
       </div>
-      <div className={styles.calendarMonthBody}>
-        {renderDays(
-          allDays,
-          dateRender,
-          dateInnerContent,
-          value,
-          selectHandler
-        )}
-      </div>
+      <div className={styles.calendarMonthBody}>{renderDays(allDays)}</div>
     </div>
   )
 }

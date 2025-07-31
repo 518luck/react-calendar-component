@@ -1,5 +1,8 @@
+import { useContext } from 'react'
 import { Dayjs } from 'dayjs'
 
+import allLocales from './locale'
+import LocaleContext from './locale/LocaleContext'
 import styles from './index.module.scss'
 
 interface HeaderProps {
@@ -11,6 +14,9 @@ interface HeaderProps {
 const Header = (props: HeaderProps) => {
   const { curMonth, prevMonthHandler, nextMonthHandler, todayHandler } = props
 
+  const localeContext = useContext(LocaleContext)
+  const CalendarLocale = allLocales[localeContext.locale]
+
   return (
     <div className={styles.calendar_header}>
       <div className={styles.calendar_header_left}>
@@ -18,13 +24,13 @@ const Header = (props: HeaderProps) => {
           &lt;
         </div>
         <div className={styles.calendar_header_value}>
-          {curMonth.format('YYYY 年 MM 月')}
+          {curMonth.format(CalendarLocale.formatMonth)}
         </div>
         <div className={styles.calendar_header_icon} onClick={nextMonthHandler}>
           &gt;
         </div>
         <button className={styles.calendar_header_btn} onClick={todayHandler}>
-          今天
+          {CalendarLocale.today}
         </button>
       </div>
     </div>

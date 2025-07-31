@@ -1,5 +1,6 @@
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import type { Dayjs } from 'dayjs'
+import { useControllableValue } from 'ahooks'
 import cs from 'classnames'
 
 import LocaleContext from './locale/LocaleContext'
@@ -13,6 +14,7 @@ export interface CalendarProps {
 }
 export interface CalendarProps {
   value: Dayjs
+  defaultValue?: Dayjs
   // style 和 className 用于修改 Calendar 组件外层容器的样式。
   style?: CSSProperties
   className?: string | string[]
@@ -26,16 +28,21 @@ export interface CalendarProps {
 }
 
 const Calendar = (props: CalendarProps) => {
-  const { style, className, locale, onChange, value } = props
-  const [curValue, setCurValue] = useState<Dayjs>(value)
+  const { style, className, locale, value, onChange } = props
+  const [curValue, setCurValue] = useControllableValue<Dayjs>(props, {
+    defaultValue: dayjs(),
+  })
   const [curMonth, setCurMonth] = useState<Dayjs>(value)
 
   const classNames = cs(styles.calendar, className)
 
-  const selectHandler = (date: Dayjs) => {
+  const changeDate = (date: Dayjs) => {
     setCurValue(date)
     setCurMonth(date)
     onChange?.(date)
+  }
+  const selectHandler = (date: Dayjs) => {
+    changeDate(date)
   }
 
   const prevMonthHandler = () => {
@@ -46,9 +53,7 @@ const Calendar = (props: CalendarProps) => {
   }
   const todayHandler = () => {
     const date = dayjs(Date.now())
-    setCurValue(date)
-    setCurMonth(date)
-    onChange?.(date)
+    changeDate(date)
   }
 
   return (
