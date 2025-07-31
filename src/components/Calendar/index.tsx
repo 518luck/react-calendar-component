@@ -6,6 +6,7 @@ import LocaleContext from './locale/LocaleContext'
 import Header from './Header'
 import MonthCalendar from './MonthCalendar'
 import styles from './index.module.scss'
+import dayjs from 'dayjs'
 
 export interface CalendarProps {
   value: Dayjs
@@ -33,6 +34,7 @@ const Calendar = (props: CalendarProps) => {
 
   const selectHandler = (date: Dayjs) => {
     setCurValue(date)
+    setCurMonth(date)
     onChange?.(date)
   }
 
@@ -42,6 +44,12 @@ const Calendar = (props: CalendarProps) => {
   const nextMonthHandler = () => {
     setCurMonth(curMonth.add(1, 'month'))
   }
+  const todayHandler = () => {
+    const date = dayjs(Date.now())
+    setCurValue(date)
+    setCurMonth(date)
+    onChange?.(date)
+  }
 
   return (
     <LocaleContext.Provider value={{ locale: locale || navigator.language }}>
@@ -50,6 +58,7 @@ const Calendar = (props: CalendarProps) => {
           curMonth={curMonth}
           prevMonthHandler={prevMonthHandler}
           nextMonthHandler={nextMonthHandler}
+          todayHandler={todayHandler}
         />
         <MonthCalendar
           {...props}
